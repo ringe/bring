@@ -1,5 +1,7 @@
 # Bring
 
+[![Build Status](https://travis-ci.org/wepack/bring.png)](https://travis-ci.org/wepack/bring)
+
 A simple ruby library for communicating with the Bring's APIs (see:
 [developer.bring.com](http://developer.bring.com)).
 
@@ -22,13 +24,12 @@ Or install it yourself as:
 ## Usage
 
 From the commandline:
-```
-$ bring postal_code 0190 no
-OSLO
-```
 
-Or in Ruby
-```
+    $ bring postal_code 0190 no
+    OSLO
+
+Or in Ruby:
+```ruby
 require 'bring/postal_code'
 Bring::PostalCode.new('0190', country: 'no).city # => 'OSLO'
 ```
