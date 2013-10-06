@@ -1,0 +1,42 @@
+--- 
+recorded_with: VCR 2.6.0
+http_interactions: 
+- request: 
+    method: get
+    uri: http://fraktguide.bring.no/fraktguide/api/postalCode.json?country&pnr=0190
+    body: 
+      string: ""
+    headers: 
+      User-Agent: 
+      - Faraday v0.8.8
+  response: 
+    status: 
+      code: 200
+      message: 
+    headers: 
+      content-type: 
+      - application/json; charset=UTF-8
+      content-length: 
+      - "76"
+      expires: 
+      - Thu, 01 Jan 1970 00:00:00 GMT
+      set-cookie: 
+      - SHIPPINGGUIDE-JSESSIONID=1bd7ec8tzsbo44esiiqbukl89;Path=/fraktguide;HttpOnly, BIGipServerpool_posten_konsernportal_fraktguide.bring.no_8020=93549707.21535.0000; path=/
+      connection: 
+      - close
+      content-language: 
+      - en-US
+    body: 
+      string: |
+        
+        
+        {
+          "result": "OSLO",
+          "valid": true,
+          "postalCodeType": "NORMAL"
+        
+          
+        }
+
+    http_version: 
+  recorded_at: Sun, 06 Oct 2013 14:28:49 GMT

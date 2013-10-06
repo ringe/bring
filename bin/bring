@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+
+require 'bring/cli'
+Bring::CLI.start
