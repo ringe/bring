@@ -5,7 +5,7 @@
 A simple ruby library for communicating with the Bring's APIs (see:
 [developer.bring.com](http://developer.bring.com)).
 
-*For now only the Postal Code API is supported.*
+*For now only the Postal Code and Tracking API is supported.*
 
 ## Installation
 
@@ -27,6 +27,19 @@ From the commandline:
 
     $ bring postal_code 0190 no
     OSLO
+
+    $ bring tracking TESTPACKAGE-EDI
+    Shipment Number: SHIPMENTNUMBER
+    Total Weight: 16.5 kg
+    Total Volume: 45.2 dm3
+    Number of Packages: 1
+
+    Package Number: TESTPACKAGEEDI
+    Measurements: 41x38x29 cm (LxWxH)
+
+    Status: PRE_NOTIFIED
+    Ingen sending er mottatt ennå, kun melding om dette
+    2013-10-06 12:44
 
 Or in Ruby:
 ```ruby
