@@ -99,6 +99,22 @@ describe Bring::Tracking do
       end
     end
 
+    describe 'color' do
+      let(:event) { Bring::Tracking::Event.new '' }
+
+      it 'returns yellow when status is READY_FOR_PICKUP' do
+        event.stub(:status).and_return('READY_FOR_PICKUP')
+
+        expect(event.color).to eq :yellow
+      end
+
+      it 'returns green when status is DELIVERED' do
+        event.stub(:status).and_return('DELIVERED')
+
+        expect(event.color).to eq :green
+      end
+    end
+
     describe 'unit_information_url' do
       it 'returns unit information url' do
         expect(event.unit_information_url).

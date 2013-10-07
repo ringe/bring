@@ -10,47 +10,50 @@ module Bring
     end
 
     desc 'tracking TRACKING_NUMBER', 'get tracking data from TRACKING_NUMBER'
-    option :full, :type => :boolean
+    option :full,  :type => :boolean
+    option :color, :type => :boolean, :default => true
     def tracking(tracking_number)
       require 'bring/tracking'
       begin
         tracking = Tracking.new(tracking_number)
 
         tracking.consignments.each do |consignment|
-          say "Shipment Number: #{consignment.consignment_id}"
-          puts "Total Weight: #{consignment.total_weight_in_kgs} kg"
-          puts "Total Volume: #{consignment.total_volume_in_dm3} dm3"
-          puts "Number of Packages: #{consignment.packages.count}"
+          say "Shipment Number: #{consignment.consignment_id}", :white
+          say "Total Weight: #{consignment.total_weight_in_kgs} kg"
+          say "Total Volume: #{consignment.total_volume_in_dm3} dm3"
+          say "Number of Packages: #{consignment.packages.count}"
 
           consignment.packages.each do |package|
-            print "\n"
-            puts "Package Number: #{package.package_number}"
+            say ""
+            say "Package Number: #{package.package_number}", :white
 
             if package.sender_name
-              puts "Sender: #{package.sender_name}"
+              say "Sender: #{package.sender_name}"
             end
 
             if package.recipient_address
-              puts "Recipient: #{package.recipient_address.to_s}"
+              say "Recipient: #{package.recipient_address.to_s}"
             end
+
             sizes =
               [package.length_in_cm, package.width_in_cm, package.height_in_cm]
-            puts "Measurements: #{sizes.join('x')} cm (LxWxH)"
+            say "Measurements: #{sizes.join('x')} cm (LxWxH)"
 
             if package.date_of_return
-              puts "Last day for retrieval: #{package.date_of_return}"
+              say "Last day for retrieval: #{package.date_of_return}"
             end
 
             package.events.each_with_index do |event, index|
-              print "\n"
-              puts "Status: #{event.status}"
-              puts event.description
+              color = event.color if options[:color]
+              say ""
+              say "Status: #{event.status}", color
+              say event.description
 
-              print "#{event.date.strftime('%Y-%m-%d %H:%M')}"
+              say "#{event.date.strftime('%Y-%m-%d %H:%M')}", nil, false
               if event.postal_code?
-                print ", #{event.postal_code} #{event.city}"
+                say ", #{event.postal_code} #{event.city}", nil, false
               end
-              print "\n"
+              say ''
 
               break unless options[:full] || index > 0
             end

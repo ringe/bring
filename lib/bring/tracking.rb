@@ -93,6 +93,13 @@ module Bring
         return [] if data['definitions'].nil?
         data['definitions'].map { |attr| Definition.new attr }
       end
+
+      def color
+        case status
+        when 'READY_FOR_PICKUP' then :yellow
+        when 'DELIVERED'        then :green
+        end
+      end
     end
 
     class Package < ApiClass
