@@ -28,5 +28,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency "faraday", "~> 0.8.0"
   spec.add_dependency "faraday_middleware"
 
-  spec.add_dependency "json" if RUBY_VERSION.start_with?('1.8')
+  if RUBY_VERSION.start_with?('1.8')
+    spec.add_dependency "json"
+    spec.add_dependency "system_timer"
+  end
 end
