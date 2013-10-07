@@ -2,7 +2,8 @@
 require 'spec_helper'
 require 'bring/tracking'
 
-describe Bring::Tracking, :vcr do
+describe Bring::Tracking do
+  use_vcr_cassette 'tracking_ready_for_pickup'
   let(:tracking) { Bring::Tracking.new 'TESTPACKAGE-AT-PICKUPPOINT' }
 
   describe 'consignments' do
@@ -48,6 +49,12 @@ describe Bring::Tracking, :vcr do
     describe 'country' do
       it 'returns country' do
         expect(address.country).to eq ''
+      end
+    end
+
+    describe 'to_s' do
+      it 'formats address' do
+        expect(address.to_s).to eq '1407 VINTERBRO'
       end
     end
   end
@@ -306,6 +313,16 @@ describe Bring::Tracking, :vcr do
     describe 'total_volume_in_dm3' do
       it 'returns volume in dm3' do
         expect(consignment.total_volume_in_dm3).to eq 45.2
+      end
+    end
+
+    context 'when tracking number is invalid' do
+      use_vcr_cassette 'tracking_invalid'
+      let!(:tracking) { Bring::Tracking.new 'FOO' }
+
+      it 'raises error' do
+        expect { consignment }.to raise_error(Bring::Tracking::Error,
+                                              'Invalid query (400)')
       end
     end
   end

@@ -1,3 +1,4 @@
+require 'date'
 require 'bring/base_request'
 
 module Bring
@@ -8,10 +9,23 @@ module Bring
       @tracking_number = tracking_number
     end
 
+    class Error < StandardError
+    end
+
     class ApiClass
       def initialize(data)
         @data = data
+        raise(Error, error_message) if has_errors?
       end
+
+      def has_errors?
+        !data['error'].nil?
+      end
+
+      def error_message
+        "#{data['error']['message']} (#{data['error']['code']})"
+      end
+
 
       def self.attribute(name)
         define_method name do
@@ -29,10 +43,6 @@ module Bring
           word.capitalize! unless index == 0
         }.join
       end
-
-      def parse_date(date)
-        Date.strptime(date, '%d.%m.%Y')
-      end
     end
 
     class Address < ApiClass
@@ -42,6 +52,13 @@ module Bring
       attribute :city
       attribute :country_code
       attribute :country
+
+      def to_s
+        address =
+          [ address_line_1, address_line_2, "#{postal_code} #{city}", country ]
+        address.delete_if { |line| line.nil? || line == '' }
+        address.join(', ')
+      end
     end
 
     class Definition < ApiClass
@@ -63,6 +80,10 @@ module Bring
       attribute :display_date
       attribute :display_time
       attribute :consignment_event
+
+      def postal_code?
+        !(postal_code.nil? or postal_code.empty?)
+      end
 
       def date
         @date ||= DateTime.strptime(date_iso)
@@ -91,10 +112,12 @@ module Bring
       attribute :sender_name
 
       def date_of_return
-        parse_date data['dateOfReturn']
+        return if data['dateOfReturn'].nil?
+        @date_of_return ||= Date.strptime(data['dateOfReturn'], '%d.%m.%Y')
       end
 
       def recipient_address
+        return unless data['recipientAddress'].is_a?(Hash)
         @address ||= Address.new(data['recipientAddress'])
       end
 
@@ -110,12 +133,14 @@ module Bring
       attribute :total_volume_in_dm3
 
       def packages
+      return [] if data['packageSet'].nil?
         @packages ||=
           data['packageSet'].map { |attr| Package.new attr }
       end
     end
 
     def consignments
+      return [] if data['consignmentSet'].nil?
       @consignments ||=
         data['consignmentSet'].map { |attr| Consignment.new attr }
     end

@@ -19,6 +19,8 @@ RSpec.configure do |config|
   # This will be default behaviour in RSpec 3
   config.treat_symbols_as_metadata_keys_with_true_values = true
 
+  config.extend VCR::RSpec::Macros
+
   def capture(stream)
     begin
       stream = stream.to_s

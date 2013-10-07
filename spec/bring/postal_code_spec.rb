@@ -2,7 +2,8 @@ require 'spec_helper'
 require 'bring/postal_code'
 
 describe Bring::PostalCode do
-  describe 'city', :vcr do
+  describe 'city' do
+    use_vcr_cassette 'postal_code'
     before do
       Bring::PostalCode.reset_cache!
     end
@@ -19,10 +20,14 @@ describe Bring::PostalCode do
       expect { Bring::PostalCode.new('0190').city }.not_to raise_error
     end
 
-    it 'fetches result for different countries' do
-      postal_code = Bring::PostalCode.new('12000', :country => 'se')
+    context 'when country is sweden' do
+      use_vcr_cassette 'postal_code_se'
 
-      expect(postal_code.city).to eq 'Stockholm'
+      it "fetches result from Bring's API" do
+        postal_code = Bring::PostalCode.new('12000', :country => 'se')
+
+        expect(postal_code.city).to eq 'Stockholm'
+      end
     end
   end
 end
