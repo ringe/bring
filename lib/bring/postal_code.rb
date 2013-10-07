@@ -10,7 +10,8 @@ module Bring
     end
 
     def initialize(pnr, options = {})
-      @postal_code, @country = pnr, options[:country]
+      @postal_code = pnr
+      @country = options[:country] || 'no'
     end
 
     def city
